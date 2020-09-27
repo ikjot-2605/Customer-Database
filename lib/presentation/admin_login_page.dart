@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminLoginPage extends StatefulWidget {
   @override
@@ -6,6 +7,13 @@ class AdminLoginPage extends StatefulWidget {
 }
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
+  void setDetailsAdmin() async {
+    print('getting');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String nameFound = prefs.getString('admin_name');
+    print(nameFound);
+  }
+
   _removeKeyboard(BuildContext context) {
     FocusScopeNode currentFocus = FocusScope.of(context);
 
@@ -19,6 +27,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   bool _autovalidate = false;
   @override
   Widget build(BuildContext context) {
+    setDetailsAdmin();
     return Scaffold(
       appBar: AppBar(title: Text('Register as an Admin')),
       body: Form(
