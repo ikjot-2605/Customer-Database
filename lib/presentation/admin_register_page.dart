@@ -42,9 +42,14 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register as an Admin'),
-        backgroundColor: kBlue,
+        title: Text(
+          'Register as an Admin',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        centerTitle: true,
+        elevation: 0,
       ),
       body: Form(
         // ignore: deprecated_member_use
@@ -53,7 +58,11 @@ class _AdminRegisterPageState extends State<AdminRegisterPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Hi, to register as an admin, please fill in the following.'),
+            Center(
+                child: Text(
+              'Hi, to register as an admin, please fill in the following.',
+              style: TextStyle(height: 14, letterSpacing: 1.0),
+            )),
             Container(
               width: MediaQuery.of(context).size.width / 1.15,
               child: TextFormField(
