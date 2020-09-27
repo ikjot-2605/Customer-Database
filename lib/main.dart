@@ -1,4 +1,7 @@
+import 'package:customer_database/presentation/admin_login_page.dart';
+import 'package:customer_database/presentation/admin_register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,10 +41,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<String> futureName;
+  Future<String> fetchDetailsAdmin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String name = prefs.getString('admin_name');
+    return name;
+  }
+
+  void setDetailsAdmin(
+      String name, String password, String role, String description) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String name = prefs.getString('admin_name');
+    await prefs.setString('admin_name', name);
+    await prefs.setString('admin_password', password);
+    await prefs.setString('admin_role', role);
+    await prefs.setString('admin_description', description);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Customer Database')),
+    return FutureBuilder<String>(
+      future: fetchDetailsAdmin(),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        print(snapshot);
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        } else if (snapshot.hasData) {
+          if (snapshot.data == null) {
+            return AdminRegisterPage();
+          } else {
+            return AdminLoginPage();
+          }
+        } else if (snapshot.hasError) {
+          return AdminRegisterPage();
+        } else if (snapshot.data == null) {
+          return AdminRegisterPage();
+        }
+      },
     );
   }
 }
