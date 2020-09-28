@@ -1,3 +1,5 @@
+import 'package:customer_database/presentation/home_page.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,11 +9,32 @@ class AdminLoginPage extends StatefulWidget {
 }
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
+  final _nameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  void checkDetailsAdmin(String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String passwordRecieved = prefs.getString('admin_password');
+    if (passwordRecieved == password) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } else {
+      Flushbar(
+        title: "Password Issue",
+        message: "Please Ensure Your Password is correct",
+        duration: Duration(seconds: 3),
+      )..show(context);
+    }
+  }
+
   void setDetailsAdmin() async {
     print('getting');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String nameFound = prefs.getString('admin_name');
+    String passwordFound = prefs.getString('admin_password');
     print(nameFound);
+    print('HI');
+    print(passwordFound);
+    print('HI');
   }
 
   _removeKeyboard(BuildContext context) {
@@ -39,6 +62,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             Container(
               width: MediaQuery.of(context).size.width / 1.15,
               child: TextFormField(
+                controller: _nameController,
                 validator: (value) {
                   if (value.isEmpty) {
                     _autovalidate = true;
@@ -86,6 +110,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             Container(
               width: MediaQuery.of(context).size.width / 1.15,
               child: TextFormField(
+                controller: _passwordController,
                 validator: (value) {
                   _autovalidate = true;
                   if (value.isEmpty) {
@@ -129,6 +154,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   suffixIcon: IconButton(
                     icon: Icon(Icons.visibility),
                     padding: EdgeInsets.all(0),
+                    onPressed: () {},
                   ),
                 ),
                 autocorrect: false,
@@ -147,6 +173,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   if (_formKey.currentState.validate()) {
                     _removeKeyboard(context);
                   }
+                  checkDetailsAdmin(_passwordController.text);
                 },
                 color: kBlue,
               ),
